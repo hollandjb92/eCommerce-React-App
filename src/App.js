@@ -45,20 +45,21 @@ class App extends React.Component {
       <div>
         <Header />
         <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/shop" component={ShopPage} />
+          <Route exact path="/" component={HomePage} />{" "}
+          <Route path="/shop" component={ShopPage} />{" "}
           <Route
             exact
             path="/registration"
             render={() =>
               this.props.currentUser ? <Redirect to="/" /> : <Registration />
             }
-          />
-        </Switch>
+          />{" "}
+        </Switch>{" "}
       </div>
     );
   }
 }
+
 const mapStateToProps = ({ user }) => ({
   currentUser: user.currentUser
 });
@@ -67,7 +68,6 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
-//don't need mapStateToProps for the App component
 export default connect(
   mapStateToProps,
   mapDispatchToProps
