@@ -5,12 +5,13 @@ import { ReactComponent as ShoppingIcon } from "../../assets/shopping-bag.svg";
 
 import "./cart-icon.styles.scss";
 import { toggleCartHidden } from "../../redux/cart/cart.actions";
+import { selectCartItemsCount } from "../../redux/cart/cart.selectors";
 
-const CartIcon = ({ toggleCartHidden }) => {
+const CartIcon = ({ toggleCartHidden, itemCount }) => {
   return (
     <div className="cart-icon" onClick={toggleCartHidden}>
       <ShoppingIcon className="shopping-icon" />
-      <span className="item-count">0</span>
+      <span className="item-count">{itemCount}</span>
     </div>
   );
 };
@@ -19,7 +20,12 @@ const mapDispatchToProps = dispatch => ({
   toggleCartHidden: () => dispatch(toggleCartHidden())
 });
 
+//SELECTOR - one way to get the number of items in cart to show up on cart icon BUT gets call on any changes in state because reduce is returning a "new" value/object, not just cart items which is what we care about. Use Memoization to "cache" the selectors value. Use Reselect library
+const mapStateToProps = state => ({
+  itemCount: selectCartItemsCount(state)
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CartIcon);
