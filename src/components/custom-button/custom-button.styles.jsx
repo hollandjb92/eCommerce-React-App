@@ -12,16 +12,14 @@ const buttonStyles = css`
 `;
 
 const invertedButtonStyles = css`
-  &.inverted {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
 
-    &:hover {
-      background-color: black;
-      color: white;
-      border: none;
-    }
+  &:hover {
+    background-color: black;
+    color: white;
+    border: none;
   }
 `;
 
