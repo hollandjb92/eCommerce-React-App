@@ -17,7 +17,7 @@ const StripeCheckoutButton = ({ price }) => {
       name="Royalty Clothing Ltd."
       billingAdress
       shippingAddress
-      image="https://svgshare.com/i/CUz.svg"
+      image="https://i.imgur.com/C4VbZJd.png"
       description={`Your total is $${price}`}
       amount={priceForStripe}
       panelLabel="Pay Now"
