@@ -1,29 +1,16 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import CollectionsOverview from "../../components/collections-overview/collections-overview.component";
-import CollectionPage from "../collection/collection.component";
 import { connect } from "react-redux";
-import {
-  firestore,
-  convertCollectionsSnapshotToMap
-} from "../../firebase/firebase.utils";
-import { updateCollections } from "../../redux/shop/shop.actions";
-import WithSpinner from "../../components/with-spinner/with-spinner.component";
 
-const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
-const CollectionsPageWithSpinner = WithSpinner(CollectionPage);
+import { fetchCollectionsStart } from "../../redux/shop/shop.actions";
+
+import CollectionsOverviewContainer from "../../components/collections-overview/collections-overview.container";
+import CollectionPageContainer from "../collection/collection.container";
 
 class ShopPage extends React.Component {
-  //this syntax can be used over constructor/super as REACT will take care of that
-  state = {
-    loading: true
-  };
-
-  unsubscribeFromSnapshot = null;
-
   componentDidMount() {
-    const { updateCollections } = this.props;
-    const collectionRef = firestore.collection("collections");
+    const { fetchCollectionsStart } = this.props;
+    fetchCollectionsStart();
 
     //fetch native method (EXTREMELY NESTED, bad use case for this project)
     // fetch(
@@ -31,14 +18,12 @@ class ShopPage extends React.Component {
     // )
     //   .then(res => res.json())
     //   .then(collections => console.log(collections));
-
     //Promise Pattern
-    collectionRef.get().then(snapshot => {
-      const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-      updateCollections(collectionsMap);
-      this.setState({ loading: false });
-    });
-
+    // collectionRef.get().then(snapshot => {
+    //   const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+    //   updateCollections(collectionsMap);
+    //   this.setState({ loading: false });
+    // });
     //Observable Pattern
     // collectionRef.onSnapshot(snapshot => {
     //   const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
@@ -49,21 +34,16 @@ class ShopPage extends React.Component {
 
   render() {
     const { match } = this.props;
-    const { loading } = this.state;
     return (
       <div className="shopPage">
         <Route
           exact
           path={`${match.path}`}
-          render={props => (
-            <CollectionsOverviewWithSpinner isLoading={loading} {...props} />
-          )}
+          component={CollectionsOverviewContainer}
         />
         <Route
           path={`${match.path}/:collectionId`}
-          render={props => (
-            <CollectionsPageWithSpinner isLoading={loading} {...props} />
-          )}
+          component={CollectionPageContainer}
         />
       </div>
     );
@@ -71,8 +51,7 @@ class ShopPage extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateCollections: collectionsMap =>
-    dispatch(updateCollections(collectionsMap))
+  fetchCollectionsStart: () => dispatch(fetchCollectionsStart())
 });
 
 export default connect(
