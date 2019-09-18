@@ -1,5 +1,5 @@
 //react
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import "./App.css";
@@ -17,41 +17,27 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 import { checkUserSession } from "./redux/user/user.actions";
 
-class App extends React.Component {
-  //handling auth changes on firebase
-  unsubscribeFromAuth = null;
-
-  //persistence of user sessions/state changes
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession, currentUser }) => {
+  useEffect(() => {
     checkUserSession();
-  }
+  }, [checkUserSession]);
 
-  //closes subscription
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={HomePage} />{" "}
-          <Route path="/shop" component={ShopPage} />{" "}
-          <Route exact path="/checkout" component={CheckoutPage} />{" "}
-          <Route
-            exact
-            path="/registration"
-            render={() =>
-              this.props.currentUser ? <Redirect to="/" /> : <Registration />
-            }
-          />{" "}
-        </Switch>{" "}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={HomePage} />{" "}
+        <Route path="/shop" component={ShopPage} />{" "}
+        <Route exact path="/checkout" component={CheckoutPage} />{" "}
+        <Route
+          exact
+          path="/registration"
+          render={() => (currentUser ? <Redirect to="/" /> : <Registration />)}
+        />{" "}
+      </Switch>{" "}
+    </div>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
