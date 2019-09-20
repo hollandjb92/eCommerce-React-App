@@ -2,7 +2,7 @@ const express = require("express"),
   cors = require("cors"),
   path = require("path"),
   app = express(),
-  PORT = 5000 || process.env.PORT;
+  PORT = process.env.PORT || 5000;
 
 
 if (process.env.NODE_ENV !== "production") {
